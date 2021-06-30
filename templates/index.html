@@ -1,0 +1,180 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<style>
+table {
+      width: 100%;
+    }
+
+    thead, tbody, tr, td, th, tfoot { display: block; }
+
+    tr:after {
+        content: ' ';
+        display: block;
+        visibility: hidden;
+        clear: both;
+    }
+
+    thead th {
+        /* height: 30px; */
+
+        text-align:center;
+    }
+
+    tbody {
+        /* height: 345px; */
+        max-height: 350px;
+        overflow-y: auto;
+    }
+
+    thead {
+        fallback:initial;
+    }
+    /* tbody td, thead th, tfoot th { */
+    tbody td, thead th {
+        width: 16.66%;
+        float: left;
+        
+      text-align:center;
+    }
+</style>
+<br>
+<div class="form-group row">
+  <!-- **Show balance of power** -->
+  <div class='col-6'>
+    <h2 align='left' style="font-size:2vw;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 5px;padding-left: 20px;">My Current Energy</h2>
+    <br>
+    <div class="form-group row">
+      <div class="col-4">
+        <h2 align='left' style="font-size:2vw;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 5px;padding-left: 20px;">{{power}}</h2>
+      </div>
+      <div class="col-2">
+        <h2>kWh</h2>
+      </div>
+    </div>
+  </div>
+  <!-- **Show balance e-coin value** -->
+  <div class='col-6'>
+    <h2 align='left' style="font-size:2vw;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 5px;padding-left: 20px;">My Current Wallet</h2>
+    <br>
+    <div class="form-group row">
+      <div class="col-4">
+        <h2 align='left' style="font-size:2vw;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 5px;padding-left: 20px;">{{money}}</h2>
+      </div>
+      <div class="col-2">
+        <h2>THB</h2>
+      </div>
+    </div>
+  </div>
+  <div class='col-6'>
+    <br>
+    <h2 align='left' style="font-size:2vw;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 5px;padding-left: 20px;">Total Offer</h2>
+
+    <div class="form-group row">
+      <div class="col-3">
+        <div style="font-weight: bold;padding-left: 20px;font-size: 1vw;">Pending</div>
+      </div>
+      <div class="col-2">
+        <h2 align='left' style="font-size:1vw;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 5px;padding-left: 20px;">{{pendingEnergy}}</h2>
+        <!--<input type="text" class="form-control" value="10000" name="unit" style="font-size:3vh;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 1px;padding-left: 20px;">-->
+      </div>
+      <div class="col-2">
+        <div style="font-weight: bold;font-size: 1vw;">kWh</div>
+      </div>
+      <div class="col-3">
+        <h2 align='left' style="font-size:1vw;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 5px;padding-left: 20px;">{{pendingPrice}}</h2>
+        <!--<input type="text" class="form-control" value="10000" name="unit" style="font-size:3vh;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 1px;padding-left: 20px;">-->
+      </div>
+      <div class="col-2">
+        <div style="font-weight: bold;font-size: 1vw;">THB</div>
+      </div>
+      <div class="col-3">
+        <div style="font-weight: bold;padding-left: 20px;font-size: 1vw;">Sold Out</div>
+      </div>
+      <div class="col-2">
+        <h2 align='left' style="font-size:1vw;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 5px;padding-left: 20px;">{{soldOutEnergy}}</h2>
+        <!--<input type="text" class="form-control" value="10000" name="unit" style="font-size:3vh;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 1px;padding-left: 20px;">-->
+      </div>
+      <div class="col-2">
+        <div style="font-weight: bold;font-size: 1vw;">kWh</div>
+      </div>
+      <div class="col-3">
+        <h2 align='left' style="font-size:1vw;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 5px;padding-left: 20px;">{{soldOutPrice}}</h2>
+        <!--<input type="text" class="form-control" value="10000" name="unit" style="font-size:3vh;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 1px;padding-left: 20px;">-->
+      </div>
+      <div class="col-2">
+        <div style="font-weight: bold;font-size: 1vw;">THB</div>
+      </div>
+      <div class="col-3">
+        <div style="font-weight: bold;padding-left: 20px;font-size: 1vw;">Total</div>
+      </div>
+      <div class="col-2">
+        <h2 align='left' style="font-size:1vw;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 5px;padding-left: 20px;">{{sellEnergy}}</h2>
+        <!--<input type="text" class="form-control" value="10000" name="unit" style="font-size:3vh;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 1px;padding-left: 20px;">-->
+      </div>
+      <div class="col-2">
+        <div style="font-weight: bold;font-size: 1vw;">kWh</div>
+      </div>
+      <div class="col-3">
+        <h2 align='left' style="font-size:1vw;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 5px;padding-left: 20px;">{{sellPrice}}</h2>
+        <!--<input type="text" class="form-control" value="10000" name="unit" style="font-size:3vh;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 1px;padding-left: 20px;">-->
+      </div>
+      <div class="col-2">
+        <div style="font-weight: bold;font-size: 1vw;">THB</div>
+      </div>
+    </div>
+  </div>
+  <div class='col-6'>
+    <br>
+    <h2 align='left' style="font-size:2vw;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 5px;padding-left: 20px;">Total Bid</h2>
+    <div class="form-group row">
+      <div class="col-3">
+        <div style="font-weight: bold;padding-left: 20px;font-size: 1vw;">Total</div>
+      </div>
+      <div class="col-2">
+        <h2 align='left' style="font-size:1vw;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 5px;padding-left: 20px;">{{buyEnergy}}</h2>
+        <!--<input type="text" class="form-control" value="10000" name="unit" style="font-size:3vh;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 1px;padding-left: 20px;">-->
+      </div>
+      <div class="col-2">
+        <div style="font-weight: bold;font-size: 1vw;">kWh</div>
+      </div>
+      <div class="col-3">
+        <h2 align='left' style="font-size:1vw;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 5px;padding-left: 20px;">{{buyPrice}}</h2>
+        <!--<input type="text" class="form-control" value="10000" name="unit" style="font-size:3vh;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 1px;padding-left: 20px;">-->
+      </div>
+      <div class="col-2">
+        <div style="font-weight: bold;font-size: 1vw;">THB</div>
+      </div>
+    </div>
+  </div>
+
+<!-- History Sell-->
+<div style="color: white;">.</div>
+<h2 align='left' style="font-size:2vw;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 5px;padding-left: 20px;">History</h2>
+<!-- <br> -->
+<!-- **Show history table** -->
+<table class="table table-dark table-hover">
+    <thead>
+      <tr>
+        <th scope="col">Timestamp</th>
+        <th scope="col">Partner</th>
+        <th scope="col">Type</th>
+        <th scope="col">Energy (kWh)</th>
+        <th scope="col">Price/Unit (THB/kWh)</th>
+        <th scope="col">Total Price (THB)</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for post in posts %}
+      <tr>
+        <td>{{ post.timestamp }}</td>
+        <td>{{ post.partner_name }}</td>
+        <td>{{ post.transection }}</td>
+        <td>{{ post.energy }}</td>
+        <td>{{ post.price }}</td>
+        <td>{{ post.ttlprice }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

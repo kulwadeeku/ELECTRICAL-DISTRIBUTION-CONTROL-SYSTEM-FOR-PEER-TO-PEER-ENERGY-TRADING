@@ -1,0 +1,136 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+{% csrf_token %}
+<script>
+const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+function myFunction() {
+    const request = new Request(
+        "../api/v1/calcualtePriceSellAmount",
+        { headers: {'X-CSRFToken': csrftoken , unitAmount : $('#input_unit').val(), priceAmount : $('#input_price').val()} }
+        );
+        fetch(request, {
+            method: 'POST',
+            mode: 'same-origin'  // Do not send CSRF token to another domain.
+        }).then(function(response) {
+            var x =response.json().then(
+                (res) => {
+                    console.log(res)
+                    $("#div1").html(res.sellPrice);
+                }
+            ).catch( (err) => {
+            console.log("eiei eiei")
+        })
+    }).catch( (err) => {
+    // when err do some thing here
+    console.log("eiei")
+    });
+}
+</script>
+<style>
+    table {
+      width: 100%;
+    }
+
+    thead, tbody, tr, td, th, tfoot { display: block; }
+
+    tr:after {
+        content: ' ';
+        display: block;
+        visibility: hidden;
+        clear: both;
+    }
+
+    thead th {
+        /* height: 30px; */
+
+        text-align:center;
+    }
+
+    tbody {
+        /* height: 345px; */
+        max-height: 345px;
+        overflow-y: auto;
+    }
+
+    thead {
+        fallback:initial;
+    }
+    /* tbody td, thead th, tfoot th { */
+    tbody td, thead th {
+        width: 20%;
+        float: left;
+        
+      text-align:center;
+    }
+</style>
+
+<br>
+<h1 style="font-size:2vw;border-left-width:1000;font-size:2vw;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 5px;padding-left: 20px;"; right = 1000px;>Offer</h1>
+<br>
+
+{% if messages %}
+<div class="alert alert-danger" role="alert">
+    {% for message in messages %}
+        {{message}}
+    {% endfor %}
+</div>
+{% endif %}
+<form action="/sellForm/" method="post">
+    {% csrf_token %}
+    <div class = "form-group row">
+        <label class = "col-2 col-form-label" ><h5>Energy :</h5></label>
+        <div class = 'col-2'>
+            <input type="text" min="0" class="form-control" name="unit" id="input_unit"  placeholder={{power}} onkeyup="myFunction()" required>
+        </div>
+        <label class = "col-1 col-form-label" for=""><h5>kWh</h5></label>
+    </div><br>
+    <div class = "form-group row">
+        <label class = "col-2 col-form-label" ><h5>Price/Unit :</h5></label>
+        <div class = 'col-2'>
+            <input type="text" min="0" class="form-control" name="price" id="input_price" onkeyup="myFunction()" required> 
+        </div>
+        <label class = "col-1 col-form-label" ><h5>THB</h5></label>
+    </div><br>
+    <div class = "form-group row">
+        <label class = "col-2 col-form-label" ><h5>Total Price :</h5></label>
+        <div class = 'col-2'>
+            <h2><div id="div1">0</div></h2>
+        </div>
+        <label class = "col-1 col-form-label" ><h5>THB</h5></label>
+    </div><br> 
+    <input type="submit" value="submit" class="btn btn-primary ">
+</form>
+
+<!-- <div id="div1">0000.00</div> -->
+
+<br>
+<h2 align='left' style="font-size:2vw;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 5px;padding-left: 20px;">Your Offerings</h2>
+<br>
+<!-- <table id=table1  class="table table-dark table-striped"> -->
+  <table class="table table-dark table-hover">
+    <thead>
+      <tr>
+        <th scope="col">Timestamp</th>
+        <th scope="col">Energy (kWh)</th>
+        <th scope="col">Price/Unit (THB/kWh)</th>
+        <th scope="col">Price (THB)</th>
+        <th scope="col">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for post in posts %}
+      <tr>
+        <td>{{ post.timestamp }}</td>
+        <td>{{ post.energy }}</td>
+        <td>{{ post.price }}</td>
+        <td>{{ post.ttlprice }}</td>
+        <td>{{ post.status }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+    
+  </table>
+
+{% endblock %}

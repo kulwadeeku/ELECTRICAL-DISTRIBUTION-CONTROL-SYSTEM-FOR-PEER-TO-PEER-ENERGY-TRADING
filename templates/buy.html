@@ -1,0 +1,195 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+{% csrf_token %}
+<script>
+const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+function myFunction() {
+    const request = new Request(
+        "../api/v1/calcualtePriceSellAmount",
+        { headers: {'X-CSRFToken': csrftoken , unitAmount : $('#input_unit').val(), priceAmount : $('#input_price').val()} }
+        );
+        fetch(request, {
+            method: 'POST',
+            mode: 'same-origin'  // Do not send CSRF token to another domain.
+        }).then(function(response) {
+            var x =response.json().then(
+                (res) => {
+                    console.log(res)
+                    $("#div1").html(res.sellPrice);
+                }
+            ).catch( (err) => {
+            console.log("eiei eiei")
+        })
+    }).catch( (err) => {
+    // when err do some thing here
+    console.log("eiei")
+    });
+}
+</script>
+<style>
+    table {
+      width: 100%;
+    }
+
+    thead, tbody, tr, td, th, tfoot { display: block; }
+
+    tr:after {
+        content: ' ';
+        display: block;
+        visibility: hidden;
+        clear: both;
+    }
+
+    thead th {
+        /* height: 30px; */
+
+        text-align:center;
+    }
+
+    tbody {
+        /* height: 345px; */
+        max-height: 345px;
+        overflow-y: auto;
+    }
+
+    thead {
+        fallback:initial;
+    }
+    /* tbody td, thead th, tfoot th { */
+    tbody td, thead th {
+        width: 20%;
+        float: left;
+        
+      text-align:center;
+    }
+</style>
+
+<br>
+<h1 style="font-size:2vw;border-left-width:1000;font-size:2vw;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 5px;padding-left: 20px;"; right = 1000px;>Bid</h1>
+<br>
+
+{% if messages %}
+<div class="alert alert-danger" role="alert">
+    {% for message in messages %}
+        {{message}}
+    {% endfor %}
+</div>
+{% endif %}
+<form action="/buyMatch/" method="post">
+  {% csrf_token %}
+  <div class = "form-group row">
+    <label class = "col-2 col-form-label" ><h5>Energy :</h5></label>
+    <div class = 'col-2'>
+      <input type="text" min="0" class="form-control" name="unit" id="input_unit"  placeholder={{power}} onkeyup="myFunction()" required>
+    </div>
+    <label class = "col-1 col-form-label" for=""><h5>kWh</h5></label>
+  </div><br>
+  <div class = "form-group row">
+      <label class = "col-2 col-form-label" ><h5>Price/Unit :</h5></label>
+      <div class = 'col-2'>
+          <input type="text" min="0" class="form-control" name="price" id="input_price" placeholder={{wallet}} onkeyup="myFunction()" required> 
+      </div>
+      <label class = "col-1 col-form-label" ><h5>THB</h5></label>
+  </div><br>
+  <div class = "form-group row">
+      <label class = "col-2 col-form-label" ><h5>Total Price :</h5></label>
+      <div class = 'col-2'>
+          <h2><div id="div1">0</div></h2>
+      </div>
+      <label class = "col-1 col-form-label" ><h5>THB</h5></label>
+  </div>
+  <br> 
+  <input type="submit" value="submit" class="btn btn-primary ">
+</form>
+<br>
+<h2 align='left' style="font-size:2vw;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 5px;padding-left: 20px;">List of Offerings</h2>
+<br>
+<table class="table table-dark table-hover">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Energy (kWh)</th>
+        <th scope="col">Price/Unit (THB/kWh)</th>
+        <th scope="col">Price (THB)</th>
+        <th scope="col">Bid</th>
+      </tr>
+    </thead>
+    <tbody">
+    {% for post in posts %}
+      <tr>
+        <td>{{ post.fname }}</td>
+        <td>{{ post.energy }}</td>
+        <td>{{ post.price }}</td>
+        <td>{{ post.ttlprice }}</td>
+        <td>
+          <!-- Old button -->
+          <!-- <a href="/edit/{{post.id}}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(103, 226, 32)" class="bi bi-bag-fill" viewBox="0 0 16 16">
+              <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5z"/>
+            </svg>
+          </a> -->
+
+          <a data-bs-toggle="modal" data-bs-target="#exampleModal-{{post.id}}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(103, 226, 32)" class="bi bi-bag-fill" viewBox="0 0 16 16">
+              <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5z"/>
+            </svg>
+          </a>
+          
+          <!-- Modal -->
+          <div class="modal fade" id="exampleModal-{{post.id}}" tabindex="-1" aria-labelledby="exampleModalLabel-{{post.id}}" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel-{{post.id}}" style="color: black;">Are you sure to confirmation ?</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="color:black;">
+                  <div class="row col-12">
+                    <div class="col-6">
+                      <h5>Name : </h5>
+                    </div>
+                    <div class="col-6">
+                      <h5>{{ post.fname }}</h5>
+                    </div>
+                  </div>
+                  <div class="row col-12">
+                    <div class="col-6">
+                      <h5>Energy (kWh) : </h5>
+                    </div>
+                    <div class="col-6">
+                      <h5>{{ post.energy }}</h5>
+                    </div>
+                  </div>
+                  <div class="row col-12">
+                    <div class="col-6">
+                      <h5>Price/Unit (THB/kWh) : </h5>
+                    </div>
+                    <div class="col-6">
+                      <h5>{{ post.price }}</h5>
+                    </div>
+                  </div>
+                  <div class="row col-12">
+                    <div class="col-6">
+                      <h5>Price (THB) : </h5>
+                    </div>
+                    <div class="col-6">
+                      <h5>{{ post.ttlprice }}</h5>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                  <a href="/edit/{{post.id}}">
+                    <button type="button" class="btn btn-primary">Yes</button>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

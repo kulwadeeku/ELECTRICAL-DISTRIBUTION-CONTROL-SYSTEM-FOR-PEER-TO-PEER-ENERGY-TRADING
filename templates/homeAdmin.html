@@ -1,0 +1,190 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<style>
+    table {
+      width: 100%;
+    }
+
+    thead, tbody, tr, td, th, tfoot { display: block; }
+
+    tr:after {
+        content: ' ';
+        display: block;
+        visibility: hidden;
+        clear: both;
+    }
+
+    thead th {
+        /* height: 30px; */
+
+        text-align:center;
+    }
+
+    tbody {
+        /* height: 345px; */
+        max-height: 150px;
+        overflow-y: auto;
+    }
+
+    thead {
+        fallback:initial;
+    }
+    /* tbody td, thead th, tfoot th { */
+    tbody td, thead th {
+        width: 20%;
+        float: left;
+        
+      text-align:center;
+    }
+</style>
+<br>
+{% if messages %}
+<div class="alert alert-danger" role="alert">
+    {% for message in messages %}
+        {{message}}
+    {% endfor %}
+</div>
+{% endif %}
+<br>
+<h1 style="font-size:2vw;border-left-width:1000;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 5px;padding-left: 20px;">Register User IP Address</h1>
+<br>
+<div class="form-group row">
+    <div class='col-6'>
+        <form action="/regisAdmin/" method="post">
+            {% csrf_token %}
+            <div class = "form-group row">
+                <label class = "col-3 col-form-label" ><h5>Username :</h5></label>
+                <div class = 'col-4'>
+                    <input type="text" min="0" class="form-control" name="username" required>
+                </div>
+            </div><br>
+            <div class = "form-group row">
+                <label class = "col-3 col-form-label" ><h5>IP Address :</h5></label>
+                <div class = 'col-4'>
+                    <input type="text" min="0" class="form-control" name="ip" required> 
+                </div>
+            </div><br>
+            <div class = "form-group row">
+                <label class = "col-3 col-form-label" ><h5>Permission :</h5></label>
+                <div class = 'col-4'>
+                    <input type="text" min="0" class="form-control" name="permission" required> 
+                </div>
+            </div><br>
+            <input type="submit" value="submit" class="btn btn-primary ">
+        </form>
+    </div>
+    <div class='col-6'>
+        <h4>Permission Type</h4>
+        <h5>Type <span class="badge bg-danger">0</span> <span> is Admin</span></h5>
+        <h5>Type <span class="badge bg-primary">1</span> <span> is Consumer</span></h5>
+        <h5>Type <span class="badge bg-success">2</span> <span> is Producer</span></h5>
+        <h5>Type <span class="badge bg-secondary">3</span> <span> is Prosumer</span></h5>
+    </div>
+</div>
+
+<br>
+<h1 style="font-size:2vw;border-left-width:1000;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 5px;padding-left: 20px;">Wallet Top Up list</h1>
+<br>
+<div class="form-group row">
+    <div class='col-6'>
+        <form action="/topUpAdmin/" method="post">
+            {% csrf_token %}
+            <div class = "form-group row">
+                <label class = "col-3 col-form-label" ><h5>ID :</h5></label>
+                <div class = 'col-4'>
+                    <input type="text" min="0" class="form-control" name="id_amount" required>
+                </div>
+            </div><br>
+            <div class = "form-group row">
+                <label class = "col-3 col-form-label" ><h5>Amount :</h5></label>
+                <div class = 'col-4'>
+                    <input type="text" min="0" class="form-control" name="amount" required> 
+                </div>
+                <label class = "col-1 col-form-label" ><h5>THB</h5></label>
+            </div><br>
+            <input type="submit" value="submit" class="btn btn-primary ">
+        </form>
+    </div>
+</div>
+<br>
+<table class="table table-dark table-hover">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Timestamp</th>
+        <th scope="col">Username</th>
+        <th scope="col">Amount (THB)</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for post in posts %}
+      <tr>
+        <td>{{ post.id }}</td>
+        <td>{{ post.timestamp }}</td>
+        <td>{{ post.user }}</td>
+        <td>{{ post.money }}</td>
+        <td>
+            <a data-bs-toggle="modal" data-bs-target="#exampleModal-{{post.id}}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(103, 226, 32)" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                </svg>
+            </a>
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal-{{post.id}}" tabindex="-1" aria-labelledby="exampleModalLabel-{{post.id}}" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel-{{post.id}}" style="color: black;">Are you sure to confirmation ?</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" style="color:black;">
+                      <div class="row col-12">
+                        <div class="col-6">
+                          <h5>ID : </h5>
+                        </div>
+                        <div class="col-6">
+                          <h5>{{ post.id }}</h5>
+                        </div>
+                      </div>
+                      <div class="row col-12">
+                        <div class="col-6">
+                          <h5>Timestamp : </h5>
+                        </div>
+                        <div class="col-6">
+                          <h5>{{ post.timestamp }}</h5>
+                        </div>
+                      </div>
+                      <div class="row col-12">
+                        <div class="col-6">
+                          <h5>Username : </h5>
+                        </div>
+                        <div class="col-6">
+                          <h5>{{ post.user }}</h5>
+                        </div>
+                      </div>
+                      <div class="row col-12">
+                        <div class="col-6">
+                          <h5>Amount (THB) : </h5>
+                        </div>
+                        <div class="col-6">
+                          <h5>{{ post.money }}</h5>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                      <a href="/approve/{{post.id}}">
+                        <button type="button" class="btn btn-primary">Yes</button>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

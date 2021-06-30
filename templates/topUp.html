@@ -1,0 +1,125 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<style>
+    table {
+      width: 100%;
+    }
+
+    thead, tbody, tr, td, th, tfoot { display: block; }
+
+    tr:after {
+        content: ' ';
+        display: block;
+        visibility: hidden;
+        clear: both;
+    }
+
+    thead th {
+        /* height: 30px; */
+
+        text-align:center;
+    }
+
+    tbody {
+        /* height: 345px; */
+        max-height: 345px;
+        overflow-y: auto;
+    }
+
+    thead {
+        fallback:initial;
+    }
+    /* tbody td, thead th, tfoot th { */
+    tbody td, thead th {
+        width: 33.33%;
+        float: left;
+        
+      text-align:center;
+    }
+</style>
+
+{% if messages %}
+<div class="alert alert-danger" role="alert">
+    {% for message in messages %}
+        {{message}}
+    {% endfor %}
+</div>
+{% endif %}
+<br>
+<div class="form-group row">
+  <div class='col-6'>
+    <h2 align='left' style="font-size:2vw;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 5px;padding-left: 20px;">My Current Wallet</h2>
+    <br>
+    <div class="form-group row">
+      <div class="col-4">
+        <h2 align='left' style="font-size:2vw;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 5px;padding-left: 20px;">{{money}}</h2>
+      </div>
+      <div class="col-2">
+        <h2>THB</h2>
+      </div>
+    </div>
+  </div>
+  <div class='col-6'>
+    <h2 align='left' style="font-size:2vw;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 5px;padding-left: 20px;">Total Money Top Up</h2>
+    <br>
+    <div class="form-group row">
+      <div class="col-4">
+        <h2 align='left' style="font-size:2vw;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 5px;padding-left: 20px;">{{totalTopUp}}</h2>
+      </div>
+      <div class="col-2">
+        <div style="font-weight: bold;padding-left: 20px;font-size: 2vw;">THB</div>
+      </div>
+    </div>
+  </div>
+
+  <div class='col-12'>
+    <br>
+    <h2 align='left' style="font-size:2vw;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 5px;padding-left: 20px;">Money Top Up</h2>
+    <br>
+    <form action="/topUp/" method="post" >
+      {% csrf_token %}
+      <div class = "form-group row">
+        <div class="col-2">
+          <div style="font-weight: bold;padding-left: 20px;font-size: 2vw;">Money :</div>
+        </div>
+        <div class="col-2" style="margin: auto;margin-left:0px;margin-right:0px;">
+          <input type="text" min="0" class="form-control" name="moneyTopUp" required> 
+        </div>
+        <div class="col-2">
+          <div style="font-weight: bold;padding-left: 20px;font-size: 2vw;">THB</div>
+        </div>
+      </div>
+      <br> 
+      <div class="col-5" >
+        <input style="float: right;" type="submit" value="submit" class="btn btn-primary ">
+      </div>
+      
+    </form>
+  
+  </div>
+  
+</div>
+
+<br>
+<h2 align='left' style="font-size:2vw;background-color:rgb(31, 30, 30);color: rgb(255, 255, 255);border-radius: 15px;padding: 5px;padding-left: 20px;">Money Top Up History</h2>
+<br>
+<table class="table table-dark table-hover">
+    <thead>
+      <tr>
+        <th scope="col">Timestamp</th>
+        <th scope="col">Amount (THB)</th>
+        <th scope="col">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for post in data %}
+      <tr>
+        <td>{{ post.timestamp }}</td>
+        <td>{{ post.money }}</td>
+        <td>Pending</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

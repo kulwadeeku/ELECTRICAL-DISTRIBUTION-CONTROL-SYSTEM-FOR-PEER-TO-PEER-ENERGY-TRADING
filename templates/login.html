@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<br>
+<h1 align = "center" style='font-size:3vw'>Login</h1>
+<br>
+{% if messages %}
+<div class="alert alert-danger" role="alert">
+    {% for message in messages %}
+        {{message}}
+    {% endfor %}
+</div>
+{% endif %}
+
+<form action="/loginForm/" method="post">
+    {% csrf_token %}
+    <div class = "form-group row">
+        <label class = "col-2 col-form-label" for=""><h5>Username :</h5></label>
+        <div class = 'col-4'>
+            <input type="text" class="form-control" name="username" required>
+        </div>
+    </div><br>
+    <div class = "form-group row">
+        <label class = "col-2 col-form-label" for=""><h5>Password :</h5></label>
+        <div class = 'col-4'>
+            <input type="password" class="form-control" name="password" required>
+        </div>
+    </div><br>
+    <input type="submit" value="Login" class="btn btn-primary ">
+</form>
+
+{% endblock %}

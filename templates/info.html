@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<br>
+<h1 align = "center" style='font-size:3vw'>Information</h1>
+<br>
+{% if messages %}
+<div class="alert alert-danger" role="alert">
+    {% for message in messages %}
+        {{message}}
+    {% endfor %}
+</div>
+{% endif %}
+
+<form action="/addForm/" method="post">
+    {% csrf_token %}
+    <div class = "form-group row">
+        <label class = "col-2" for=""><h5>Username :</h5></label>
+        <div class = 'col-4'>
+            <text type="text"><h5>{{user.username}}</h5></text>
+        </div>
+    </div><br>
+    <div class = "form-group row">
+        <label class = "col-2" for=""><h5>First Name :</h5></label>
+        <div class = 'col-4'>
+            <h5>{{user.first_name}}</h5>
+        </div>
+    </div><br>
+    <div class = "form-group row">
+        <label class = "col-2" for=""><h5>Last Name :</h5></label>
+        <div class = 'col-4'>
+            <h5>{{user.last_name}}</h5>
+        </div>
+    </div><br>
+    <div class = "form-group row">
+        <label class = "col-2" for=""><h5>Email :</h5></label>
+        <div class = 'col-4'>
+            <h5>{{user.email}}</h5>
+        </div>
+    </div>
+</form>
+{% endblock %}

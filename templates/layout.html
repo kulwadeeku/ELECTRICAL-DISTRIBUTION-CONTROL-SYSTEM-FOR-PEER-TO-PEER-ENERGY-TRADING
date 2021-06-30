@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energy Trading Platform </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js" integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <!-- jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- icon -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="/">Energy Trading Platform</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              {% if user.is_authenticated %}
+                <!-- 1 1 is admin #Add ip and permission + Accept Top-up-->
+                {% if user.is_superuser == 1 and user.is_staff == 1 %}
+                <li class="nav-item">
+                  <a class="nav-link" href="/homeAdmin">Home</a>
+                </li>
+                {% else %}
+                  <li class="nav-item">
+                    <a class="nav-link" href="/home">Home</a>
+                  </li>
+                  <!-- 0 0 is consumer #buy and Top-up-->
+                  {% if user.is_superuser == 0 and user.is_staff == 0 %} 
+                  <li class="nav-item">
+                    <a class="nav-link" href="/buy">Bid</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/topUp">Wallet Top Up</a>
+                  </li>
+                  {% endif %}
+                  <!-- 0 1 is producer #sell Deposit -->
+                  {% if user.is_superuser == 0 and user.is_staff == 1 %} 
+                  <li class="nav-item">
+                    <a class="nav-link" href="/sell">Offer</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/deposit">Deposit Energy</a>
+                  </li>
+                  {% endif %}
+                  <!-- 1 0 is prosumer #buy sell Top-up Deposit-->
+                  {% if user.is_superuser == 1 and user.is_staff == 0 %} 
+                  <li class="nav-item">
+                    <a class="nav-link" href="/buy">Bid</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/sell">Offer</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/topUp">Wallet Top Up</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/deposit">Deposit Energy</a>
+                  </li>
+                  {% endif %}
+                {% endif %}
+              {% else %}
+                <li class="nav-item">
+                  <a class="nav-link " href="/register">Register</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link " href="/login">Login</a>
+                </li>
+              {% endif %}
+            </ul>
+          </div>
+          <div class="collapse navbar-collapse flex-grow-1 text-right" id="myNavbar">
+            <ul class="navbar-nav ms-auto flex-nowrap">
+              {% if user.is_authenticated %}
+                <li class="nav-item">
+
+                  <a class="nav-link" href="/info">
+                    Hello , {{user.first_name}}
+                  </a>
+                </li> 
+                <li class="nav-item">
+                  <a class="nav-link" href="/logout">Logout</a>
+                </li>
+                {% endif %}
+            </ul>
+          </div>
+        </div>
+    </nav>
+    <div class="container">
+        {% block content %}
+
+        {% endblock %}
+    </div>
+  </header>
+</body>
+</html>
